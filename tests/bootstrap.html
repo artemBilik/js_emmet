@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../src/fsm.js"></script>
+    <script src="../src/node.js"></script>
+    <script src="../src/data.js"></script>
+    <script src="../src/pn.js"></script>
+    <script src="../src/emmet.js"></script>
+    <style>
+        .correct{
+            background: #00FF00;
+        }
+        .wrong{
+            background: #FF0000;
+        }
+        #test_result p{
+            color: #000000;
+        }
+    </style>
+</head>
+<body>
+    <h1>Js_Emmet test</h1>
+    <p id="time_for_test"></p>
+    <p>Ошибок - <span id="errors_counter"></span></p>
+    <div id="test_result">
+
+    </div>
+    <script>
+        function func(i) { return i; };
+        function concat(a, b) { return a + b; };
+        function safeConcat(a, b) { if(undefined === a) { a = ''; } if(undefined === b) { b = ''; } return a + b; };
+        function valueInside(a, b, v) { return a + b + v; };
+        var tester = [
+            {
+                "emmet"  : 'div+div>p>a+span^+p+(p>span)^+div+(div+div)>p^+((div>p)>p)',
+                "result" : '<div></div><div><p><a></a><span></span></p><p></p><p><span></span></p></div><div></div><div><p></p></div><div></div><div><p></p><p></p></div>',
+                "data"   : {}
+            },
+            {
+                "emmet"  : 'div+div>p>a+span^+p+(p>span)^+div+(div+div)>p+((div>p)>p)',
+                "result" : '<div></div><div><p><a></a><span></span></p><p></p><p><span></span></p></div><div></div><div><p></p><div><p></p><p></p></div></div><div></div>',
+                "data"   : {}
+            },
+            {
+                "emmet"  : '(div>a)>p^+div',
+                "result" : '<div><a></a><p></p></div><div></div>',
+                "data"   : {}
+            },
+            {
+                "emmet"  : 'a*2+img*`var`%func(2)%+hr*%func(`var`)%`test`+table>tr*`test`>td*%func(`test`)%',
+                "result" : '<a></a><a></a><img /><img /><hr /><hr /><table><tr><td></td><td></td></tr><tr><td></td><td></td></tr></table>',
+                "data"   : {"var" : 0, "test" : 2}
+            },
+            {
+                "emmet"  : 'div*2>p{`var[$]`}+{`var[$]`}^+div*2>p{`var[$]`}*2+{`var[$]`}',
+                "result" : '<div><p>first</p>first</div><div><p>second</p>second</div><div><p>first</p><p>second</p>first</div><div><p>first</p><p>second</p>second</div>',
+                "data"   : {'var' : ['first', 'second']}
+            },
+            {
+                "emmet"  : 'div+div`var`%concat(`var`,test)%+div%concat(test,var)%`var`+d`var`+d%concat(test,`var`)%+div',
+                "result" : '<div></div><divvarvartest></divvarvartest><divtestvarvar></divtestvarvar><dvar></dvar><dtestvar></dtestvar><div></div>',
+                "data"   : {'var' : 'var'}
+            },
+            {
+                "emmet"  : 'a#id+img.class+td[attr]+dt{text}+mp*2',
+                "result" : '<a id="id"></a><img class="class" /><td attr="attr"></td><dt>text</dt><mp></mp><mp></mp>',
+                "data"   : {}
+            },
+            {
+                "emmet"  : 'abr#id+hr#id`var`id+span#id%safeConcat(`var`, test)%id+input#`var`%concat(test, `var`)%+ul#%safeConcat()%`var`',
+                "result" : '<abr id="id"></abr><hr id="idvarid" /><span id="idvartestid"></span><input id="vartestvar" /><ul id="var"></ul>',
+                "data"   : {'var' : 'var'}
+            },
+            {
+                "emmet"  : 'h1#id.class+ruby#id[attr]+ol#id{text}+var#id*2',
+                "result" : '<h1 id="id" class="class"></h1><ruby id="id" attr="attr"></ruby><ol id="id">text</ol><var id="id"></var><var id="id"></var>',
+                "data"   : {}
+            },
+            {
+                "emmet"  : 'header.class+section.class1 class2 class3+div.class1 `var` %safeConcat(`var`, test)% class2+div.`var`+footer.%safeConcat(test, `var`)%',
+                "result" : '<header class="class"></header><section class="class1 class2 class3"></section><div class="class1 var vartest class2"></div><div class="var"></div><footer class="testvar"></footer>',
+                "data"   : {'var':'var'}
+            },
+            {
+                "emmet"  : 'header.class1 class2[attr]+footer.class{text}+div.class*2',
+                "result" : '<header class="class1 class2" attr="attr"></header><footer class="class">text</footer><div class="class"></div><div class="class"></div>',
+                "data"   : {}
+            },
+            {
+                "emmet"  : 'header{text `var` %safeConcat(`var`,text)% text}',
+                "result" : '<header>text var vartext text</header>',
+                "data"   : {'var':'var'}
+            },
+            {
+                "emmet"  : 'header{text}*2+section{text}',
+                "result" : '<header>text</header><header>text</header><section>text</section>',
+                "data"   : {}
+            },
+            {
+                "emmet"  : '{press }+a{here}+{ `var` %func(continue)%}+{ more}*2',
+                "result" : 'press <a>here</a> to continue more more',
+                "data"   : {'var':'to'}
+            },
+            {
+                "emmet"  : '`var`>%valueInside(test, `arg`)%>`var`+`arg`*2',
+                "result" : 'var testargvar argarg',
+                "data"   : {'var' : 'var {{value}}', 'arg' : 'arg'}
+            }
+
+        ];
+        function test(){
+            var start_time = new Date().getTime();
+            var emmet_str = '';
+            var result = '';
+            var element = null;
+            var emmet = null;
+            var text = '';
+            var errors = 0;
+            //for(var k = 0; k < 1000; k++){
+                for (var i in tester){
+                    emmet_str = tester[i].emmet;
+                    //emmet = new Emmet(emmet_str);
+                    result = new Emmet(emmet_str).create(tester[i].data);
+
+                    if(result !== tester[i].result){
+                        element = document.createElement('p');
+                        element.setAttribute('class', 'wrong');
+                        text = document.createTextNode(emmet_str + ' !== ' + result)
+                        element.appendChild(text);
+                        document.getElementById('test_result').appendChild(element);
+                        ++errors;
+                    } else {
+                        element = document.createElement('p');
+                        element.setAttribute('class', 'correct');
+                        text = document.createTextNode(emmet_str + ' === ' + result)
+                        element.appendChild(text);
+                        document.getElementById('test_result').appendChild(element);
+                    }
+                }
+            //}
+
+            var end_time = new Date().getTime();
+            document.getElementById('time_for_test').innerHTML = ((end_time - start_time) / 1000) + ' сек.';
+            document.getElementById('errors_counter').innerHTML = errors.toString();
+        };
+        test();
+    </script>
+</body>
+</html>
+
