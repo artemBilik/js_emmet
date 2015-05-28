@@ -1,12 +1,10 @@
 "use strict;"
-// /////// TREE //////////////////////
+
 function Tree(){
     this.first_child = null;
     this.right_sibling = null;
     this.parent = null;
     this.is_root = false;
-
-
 };
 Tree.prototype.addTo = function(parent){
     if(!(parent instanceof Tree)){
@@ -51,13 +49,13 @@ Tree.prototype.hasParent = function(){
 Tree.prototype.setRoot  = function(){
     this.is_root = true;
 };
-// //////// NODE ///////////////////
+
 function Node(data){
     this.type = 'tag';
     this.tag = [];
     this.attributes = [];
     this.id = [];
-    this.class = [];
+    this.class_name = [];
     this.value = [];
     this.multiplication = [];
     this.number = 0;
@@ -128,7 +126,7 @@ Node.prototype.addValueToId = function(value, type){
     this.createValue(this.id, value, type);
 };
 Node.prototype.addValueToClass = function(value, type){
-    this.createValue(this.class, value, type);
+    this.createValue(this.class_name, value, type);
 };
 Node.prototype.addValueToValue = function(value, type){
     this.createValue(this.value, value, type);
@@ -157,9 +155,9 @@ Node.prototype.getHtmlForRoot = function(){
     }
 };
 Node.prototype.getHtmlForTag = function(number){
-    var result = '';
-    var multiplication = this.get('multiplication');
-    var tag = this.get('tag');
+    var result = '',
+        multiplication = this.get('multiplication'),
+        tag = this.get('tag');
 
     for(var i = 0; i < multiplication; i++){
         if(1 < multiplication) {
@@ -183,8 +181,8 @@ Node.prototype.getHtmlForTag = function(number){
     return result;
 };
 Node.prototype.getHtmlForHtml = function(number) {
-    var result = '';
-    var multiplication = this.get('multiplication');
+    var result = '',
+        multiplication = this.get('multiplication');
     for(var i = 0; i < multiplication; ++i){
         if(1 < multiplication){
             this.setNumber(i);
@@ -203,8 +201,8 @@ Node.prototype.getHtmlForHtml = function(number) {
     return result;
 };
 Node.prototype.getHtmlForTextNode = function(number) {
-    var result = '';
-    var multiplication = this.get('multiplication');
+    var result = '',
+        multiplication = this.get('multiplication');
     for(var i = 0; i < multiplication; ++i){
         if(1 < multiplication){
             this.setNumber(i);
@@ -225,8 +223,8 @@ Node.prototype.get = function(variable, value){
     }
 
     if(undefined !== this[variable]){
-        var res = '';
-        var value_object = this[variable];
+        var res = '',
+            value_object = this[variable];
 
         for(var i in value_object){
             switch(this[variable][i].type){
@@ -258,24 +256,25 @@ Node.prototype.setNumber = function(number){
     this.number = parseInt(number);
 };
 Node.prototype.getAttributes = function(){
-    var attributes = {};
-    var id = this.get('id');
+    var attributes = {},
+        id = this.get('id'),
+        class_name = this.get('class'),
+        attributes_list = (this.get('attributes')).split(' '),
+        attr = '',
+        attr_str = '';
     if(id){
         attributes.id = id;
     }
-    var class_name = this.get('class');
     if(class_name){
-        attributes.class = class_name;
+        attributes.class_name = class_name;
     }
-    var attributes_list = (this.get('attributes')).split(' ');
-    var attr = '';
     for(var i in attributes_list){
         attr = attributes_list[i].split('=');
         if('class' === attr[0]){
-            if(undefined !== attributes.class){
-                attributes.class += ' ' + ((undefined !== attr[1]) ? attr[1] : '');
+            if(undefined !== attributes.class_name){
+                attributes.class_name += ' ' + ((undefined !== attr[1]) ? attr[1] : '');
             } else {
-                attributes.class = ((undefined !== attr[1]) ? attr[1] : '');
+                attributes.class_name = ((undefined !== attr[1]) ? attr[1] : '');
             }
         } else if('' === attr[0]) {
             continue;
@@ -284,7 +283,6 @@ Node.prototype.getAttributes = function(){
         }
     }
 
-    var attr_str = '';
     for( var key in attributes){
         attr_str += ' ' + key + '="' + attributes[key] + '"';
     }

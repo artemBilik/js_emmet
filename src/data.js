@@ -15,11 +15,11 @@ Data.prototype.get = function(variable, number, added_value){
         }
         return number;
     }
-    var memory = this.data;
     variable += ';';
-    var state = '.';
-    var value = '';
-    var symbol = '';
+    var memory = this.data,
+        state = '.',
+        value = '',
+        symbol = '';
 
     for(i = 0, length = variable.length; i < length; ++i){
         symbol = variable.charAt(i);
@@ -64,8 +64,8 @@ Data.prototype.get = function(variable, number, added_value){
 };
 
 Data.prototype.func = function(name, args, value , number){
+    var args_for_call = [];
     if('function' === typeof window[name]){
-        var args_for_call = [];
         for(var i in args){
             if('var' === args[i].type){
                 args_for_call[args_for_call.length] = this.get(args[i].value, number, null);

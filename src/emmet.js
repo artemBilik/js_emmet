@@ -27,15 +27,16 @@ Emmet.prototype.create = function(data) {
 
 Emmet.prototype.build = function() {
     try {
-        var emmet_string = 'root>' + this.getEmmet();
-        var pn = new PN();
-        var fsm = new FSM();
-        var node = new Node(this.data);
+        var emmet_string = 'root>' + this.getEmmet(),
+            pn = new PN(),
+            fsm = new FSM(),
+            node = new Node(this.data),
+            str = '',
+            i = 0,
+            length = emmet_string.length - 1,
+            symbol = '',
+            prev_sym = null;
         node.setType('root');
-        var str = '';
-        var i = 0;
-        var length = emmet_string.length - 1;
-        var symbol = '';
 
         while ('end' !== fsm.state) {
             if (i > length) {
@@ -58,7 +59,6 @@ Emmet.prototype.build = function() {
 
 
             if ('error' === fsm.state) {
-                console.dir(fsm);
                throw new Error('There was an error in your Emmet string. ' + this.getCheckTheDocumentation(i));
             }
             // @todo попробовать вернуть результат массивом
@@ -68,7 +68,7 @@ Emmet.prototype.build = function() {
 
                 switch (fsm.prev_state) {
                     case 'operator':
-                        var prev_sym = emmet_string[i - 2];
+                        prev_sym = emmet_string[i - 2];
                         if ((prev_sym !== '^' && prev_sym !== ')') && '(' !== str) {
                             pn.setOperand(node);
                             node = new Node(this.data);
@@ -274,10 +274,8 @@ Emmet.prototype.build = function() {
             pn.setOperand(node);
         }
 
-        var tree = pn.generateTree();
-        if (tree instanceof Node) {
-            this.tree = tree;
-        } else {
+        this.tree = pn.generateTree();
+        if (!(this.tree instanceof Node)) {
             throw new Error(tree);
         }
     } catch(e){

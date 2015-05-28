@@ -1,0 +1,12 @@
+#!/bin/bash
+
+#cat ./src/emmet.js > emmet.full.js
+#cat ./src/data.js | tail -n +2 >> emmet.full.js
+#cat ./src/fsm.js  | tail -n +2 >> emmet.full.js
+#cat ./src/node.js | tail -n +2 >> emmet.full.js
+#cat ./src/pn.js   | tail -n +2 >> emmet.full.js
+
+cat ./src/node.js > emmet.full.js
+
+
+java -jar /usr/share/yui-compressor/yui-compressor.jar emmet.full.js -o emmet.min.js

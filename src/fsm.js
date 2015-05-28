@@ -1073,17 +1073,18 @@ function FSM(){
     var alphabet = ["+", ">", "^", "(", ")", "a", "#", ".", "[", "]", "{", "}", "*", "`", "%", " ", "", ","];
 
     this.setState = function(symbol){
+        var key = '',
+            state = null;
         if("error" === this.state){
             throw new Error("Finite State Machine Error.");
         }
-        var key = '';
         if(-1 === alphabet.indexOf(symbol)){
             key = "a";
         } else {
             key = symbol;
         }
 
-        var state = map && map[this.state] && map[this.state][key];
+        state = map && map[this.state] && map[this.state][key];
 
         this.is_state_changed = false;
 
