@@ -299,4 +299,4 @@ Node.prototype.getAttributes = function(){
 
     return attr_str;
 };
-alert(13);
+alert(12);
