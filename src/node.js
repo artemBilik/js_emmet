@@ -1,5 +1,5 @@
 "use strict;"
-
+// /////// TREE //////////////////////
 function Tree(){
     this.first_child = null;
     this.right_sibling = null;
@@ -49,7 +49,17 @@ Tree.prototype.hasParent = function(){
 Tree.prototype.setRoot  = function(){
     this.is_root = true;
 };
-
+Tree.prototype.drop = function(){
+    if(this.first_child){
+        this.first_child.drop();
+        this.first_child = null;
+    }
+    if(this.right_sibling){
+        this.right_sibling.drop();
+        this.right_sibling = null;
+    }
+}
+// //////// NODE ///////////////////
 function Node(data){
     this.type = 'tag';
     this.tag = [];
@@ -258,7 +268,7 @@ Node.prototype.setNumber = function(number){
 Node.prototype.getAttributes = function(){
     var attributes = {},
         id = this.get('id'),
-        class_name = this.get('class'),
+        class_name = this.get('class_name'),
         attributes_list = (this.get('attributes')).split(' '),
         attr = '',
         attr_str = '';
@@ -266,15 +276,15 @@ Node.prototype.getAttributes = function(){
         attributes.id = id;
     }
     if(class_name){
-        attributes.class_name = class_name;
+        attributes['class'] = class_name;
     }
     for(var i in attributes_list){
         attr = attributes_list[i].split('=');
         if('class' === attr[0]){
-            if(undefined !== attributes.class_name){
-                attributes.class_name += ' ' + ((undefined !== attr[1]) ? attr[1] : '');
+            if(undefined !== attributes['class']){
+                attributes['class'] += ' ' + ((undefined !== attr[1]) ? attr[1] : '');
             } else {
-                attributes.class_name = ((undefined !== attr[1]) ? attr[1] : '');
+                attributes['class'] = ((undefined !== attr[1]) ? attr[1] : '');
             }
         } else if('' === attr[0]) {
             continue;
@@ -286,5 +296,6 @@ Node.prototype.getAttributes = function(){
     for( var key in attributes){
         attr_str += ' ' + key + '="' + attributes[key] + '"';
     }
+
     return attr_str;
 };

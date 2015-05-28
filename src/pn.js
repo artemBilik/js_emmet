@@ -9,13 +9,13 @@ PN.prototype.setOperand = function(operand) {
     if(!(operand instanceof Node)){
         throw new Error('PN::setOperand() operand must be a Node.');
     }
-    this.output[this.output.length] = operand;
+    this.output.push(operand);
 };
 
 PN.prototype.setOperator = function(operator){
     switch(operator){
         case '(':
-            this.stack.unshift('(');
+            this.stack.push('(');
             return true;
         case ')':
             operator = null;
@@ -24,7 +24,7 @@ PN.prototype.setOperator = function(operator){
                 if(null !== operator){
                     this.output[this.output.length] = operator;
                 }
-                operator = this.stack.shift();
+                operator = this.stack.pop();
 
                 if('>' === operator){
                     up++;
@@ -39,14 +39,14 @@ PN.prototype.setOperator = function(operator){
             }
             return true;
         case '+':
-            this.stack.unshift('+');
+            this.stack.push('+');
             return true;
         case '>':
-            this.stack.unshift('>');
+            this.stack.push('>');
             return true;
         case '^':
             do{
-                operator = this.stack.shift();
+                operator = this.stack.pop();
 
                 if(0 === this.stack.length){
                     throw new Error('The "^" operator is excess.');
@@ -62,8 +62,9 @@ PN.prototype.setOperator = function(operator){
 };
 
 PN.prototype.endOutput = function(){
+    var operator = null;
     while(true){
-        operator = this.stack.shift();
+        operator = this.stack.pop();
         if(undefined === operator){
             break;
         } else if('(' === operator){
@@ -77,38 +78,44 @@ PN.prototype.endOutput = function(){
 
 PN.prototype.generateTree = function(){
     this.endOutput();
+    var el = null;
+    var right = null;
+    var left = null;
+    var child = null;
+    var parent = null;
+
     while(0 !== this.output.length){
         el = this.output.shift();
         if(el instanceof Node){
-            this.stack.unshift(el);
+            this.stack.push(el);
         } else {
             if('>' === el){
-                child = this.stack.shift();
-                parent = this.stack.shift();
+                child = this.stack.pop();
+                parent = this.stack.pop();
                 if(parent instanceof Node && child instanceof Node){
                     child.addTo(parent);
-                    this.stack.unshift(parent);
+                    this.stack.push(parent);
                 } else {
                     throw new Error('The number of operands less than operations.');
                 }
             } else if('+' === el){
-                right = this.stack.shift();
-                left = this.stack.shift();
+                right = this.stack.pop();
+                left = this.stack.pop();
                 if(left instanceof Node && right instanceof Node){
                     left.addSibling(right);
-                    this.stack.unshift(left);
+                    this.stack.push(left);
                 } else {
                     throw new Error('The number of operands less than operations.');
                 }
             } else if('^' === el){
-                child = this.stack.shift();
+                child = this.stack.pop();
                 if(child instanceof Node){
                     parent = child.parent;
                     if(null !== parent){
-                        this.stack.unshift(parent)
+                        this.stack.push(parent)
                     } else {
                         if(!child.is_root){
-                            this.stack.unshift(child);
+                            this.stack.push(child);
                         } else {
                             throw new Error('You are out of the tree. Check "^" operator.');
                         }
@@ -121,12 +128,10 @@ PN.prototype.generateTree = function(){
             }
         }
     }
-
-    var res = this.stack.shift();
+    var res = this.stack.pop();
 
     while(null !== res.parent){
         res = res.parent;
     }
     return res;
 };
-

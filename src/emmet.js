@@ -10,16 +10,14 @@ function Emmet(emmet_string){
         return emmet_string;
     };
 
-    this.build();
-
 };
 Emmet.prototype.create = function(data) {
-    if(this.error) {
-        return null;
-    }
     try{
+        this.build();
         this.data.setData(data);
-        return this.tree.getHtml();
+        var html = this.tree.getHtml();
+            this.tree.drop();
+        return html;
     } catch(e){
         this.throwError(e.message);
     }
@@ -278,6 +276,8 @@ Emmet.prototype.build = function() {
         if (!(this.tree instanceof Node)) {
             throw new Error(tree);
         }
+        delete pn;
+        delete fsm;
     } catch(e){
         this.throwError(e.message, e.lineNumber, e.fileName);
     }

@@ -21,7 +21,7 @@ Data.prototype.get = function(variable, number, added_value){
         value = '',
         symbol = '';
 
-    for(i = 0, length = variable.length; i < length; ++i){
+    for(var i = 0, length = variable.length; i < length; ++i){
         symbol = variable.charAt(i);
         if('$' === symbol){
             symbol = number;
