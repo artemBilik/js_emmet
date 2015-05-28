@@ -1,17 +1,17 @@
-#!/bin/bash
-
-cat ./src/emmet.js | sed 1d > emmet.full.js
-echo -e "\n" >> emmet.full.js
-cat ./src/data.js | sed 1d  >> emmet.full.js
-echo -e "\n" >> emmet.full.js
-cat ./src/fsm.js  | sed 1d  >> emmet.full.js
-echo -e "\n" >> emmet.full.js
-cat ./src/node.js | sed 1d  >> emmet.full.js
-echo -e "\n" >> emmet.full.js
-cat ./src/pn.js   | sed 1d  >> emmet.full.js
+#!/bin/sh
 
 
+cat $pathToRepoRoot/src/emmet.js | sed 1d > $pathToRepoRoot/emmet.full.js
+echo -e "\n" >> $pathToRepoRoot/emmet.full.js
+cat $pathToRepoRoot/src/data.js | sed 1d  >> $pathToRepoRoot/emmet.full.js
+echo -e "\n" >> $pathToRepoRoot/emmet.full.js
+cat $pathToRepoRoot/src/fsm.js  | sed 1d  >> $pathToRepoRoot/emmet.full.js
+echo -e "\n" >> $pathToRepoRoot/emmet.full.js
+cat $pathToRepoRoot/src/node.js | sed 1d  >> $pathToRepoRoot/emmet.full.js
+echo -e "\n" >> $pathToRepoRoot/emmet.full.js
+cat $pathToRepoRoot/src/pn.js   | sed 1d  >> $pathToRepoRoot/emmet.full.js
 
-java -jar /usr/share/yui-compressor/yui-compressor.jar emmet.full.js -o emmet.min.js
 
-echo 'hook' > hook.test
+
+java -jar /usr/share/yui-compressor/yui-compressor.jar $pathToRepoRoot/emmet.full.js -o $pathToRepoRoot/emmet.min.js
+
