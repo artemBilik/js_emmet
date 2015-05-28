@@ -15,3 +15,6 @@ cat ./src/pn.js   | sed 1d  >> ./emmet.full.js
 
 java -jar /usr/share/yui-compressor/yui-compressor.jar ./emmet.full.js -o ./emmet.min.js
 
+
+
+git commit -m 'update min.js' ./emmet.min.js
