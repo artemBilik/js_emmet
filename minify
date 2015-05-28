@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 
 cat ./src/emmet.js | sed 1d > ./emmet.full.js

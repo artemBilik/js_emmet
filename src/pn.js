@@ -133,5 +133,6 @@ PN.prototype.generateTree = function(){
     while(null !== res.parent){
         res = res.parent;
     }
+
     return res;
 };
