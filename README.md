@@ -110,4 +110,31 @@ And use it like other element with "+" operation. But you cann't add a child ele
 'p+{ some text }+a' === '<p></p> some text <a></a>'
 'p+{ some text }*2' === '<p></p> some text  some text '
 ```
+## Variables
 
+You can use a variables like a value of your id, classes, text nodes, or multiplication in your string with " ` ".
+
+```
+(new Emmet('p.`info_class`{`information`}+span')).create({ 'information' : 'some information for user', 'info_class' : 'info'}) 
+ === '<p class="info">some information for user</p><span></span>'
+ ```
+ You have a special variable "$". which represent a number of your element. the number of element is 0.
+ But if you use a multiplication for your element it will change.
+ ```
+ (new Emmet('ul>li{`ul[$]`}*2')).create({'ul' : [1,2,3]}) === '<ul><li>1</li><li>2</li></ul>'
+ ```
+ Or if parent element has an multiplication than the child will have the same multiplication
+ ```
+(new Emmet(
+    'table#myTable>tbody>tr.myTr*`tr_cnt`>td.title{`data[$][title]`}+td{`data[$][value]`}')
+).create(
+    {'data' : data,'tr_cnt' : data.length,]
+);
+```
+
+You can use an object in your variable by '.'
+```
+
+(new Emmet('article{`object.title`}')).create({'object' : new Object()});
+
+```
