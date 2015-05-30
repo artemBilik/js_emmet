@@ -1,22 +1,22 @@
 #!/bin/bash
 
 
-cat ./src/emmet.js | sed 1d > ./emmet.full.js
+cat $pathToGitRoot/src/emmet.js | sed 1d > $pathToGitRoot/emmet.full.js
 echo -e "\n" >> ./emmet.full.js
-cat ./src/data.js | sed 1d  >> ./emmet.full.js
+cat $pathToGitRoot/src/data.js | sed 1d  >> $pathToGitRoot/emmet.full.js
 echo -e "\n" >> ./emmet.full.js
-cat ./src/fsm.js  | sed 1d  >> ./emmet.full.js
+cat $pathToGitRoot/src/fsm.js  | sed 1d  >> $pathToGitRoot/emmet.full.js
 echo -e "\n" >> ./emmet.full.js
-cat ./src/node.js | sed 1d  >> ./emmet.full.js
-echo -e "\n" >> ./emmet.full.js
-cat ./src/pn.js   | sed 1d  >> ./emmet.full.js
+cat $pathToGitRoot/src/node.js | sed 1d  >> $pathToGitRoot/emmet.full.js
+echo -e "\n" >> $pathToGitRoot/emmet.full.js
+cat .$pathToGitRoot/src/pn.js   | sed 1d  >> $pathToGitRoot/emmet.full.js
 
 
-java -jar /usr/share/yui-compressor/yui-compressor.jar ./emmet.full.js -o ./emmet.min.js
+java -jar /usr/share/yui-compressor/yui-compressor.jar $pathToGitRoot/emmet.full.js -o $pathToGitRoot/emmet.min.js
 
-echo 'No update min.js' > post-commit.lock
+echo 'No update min.js' > $pathToGitRoot/post-commit.lock
 
-git commit -m 'update min.js' ./emmet.min.js
+git commit -m 'update min.js' $pathToGitRoot/emmet.min.js
 
-rm post-commit.lock
+rm $pathToGitRoot/post-commit.lock
 
