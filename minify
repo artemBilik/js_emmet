@@ -15,6 +15,8 @@ cat ./src/pn.js   | sed 1d  >> ./emmet.full.js
 
 java -jar /usr/share/yui-compressor/yui-compressor.jar ./emmet.full.js -o ./emmet.min.js
 
-
+echo 'No update min.js' > post-commit.lock
 
 git commit -m 'update min.js' ./emmet.min.js
+
+rm post-commit.lock
