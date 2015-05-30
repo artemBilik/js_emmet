@@ -18,4 +18,3 @@ echo 'No update min.js' > post-commit.lock
 
 git commit -m 'update min.js' ./emmet.min.js
 
-rm post-commit.lock
